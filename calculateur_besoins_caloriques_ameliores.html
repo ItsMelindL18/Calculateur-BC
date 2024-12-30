@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur de Besoins Caloriques</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+        h1 {
+            text-align: center;
+            color: #FF8C00;
+            margin-top: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #FF8C00;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #e07a00;
+        }
+        .results {
+            background-color: #FFE4B5;
+            border: 1px solid #FF8C00;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .results p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Calculateur de Besoins Caloriques</h1>
+    <div class="container">
+        <label for="sex">Sexe :</label>
+        <select id="sex">
+            <option value="female">Femme</option>
+            <option value="male">Homme</option>
+        </select>
+        <label for="weight">Poids (kg) :</label>
+        <input type="number" id="weight" placeholder="Entrez votre poids">
+        <label for="height">Taille (cm) :</label>
+        <input type="number" id="height" placeholder="Entrez votre taille">
+        <label for="age">Âge :</label>
+        <input type="number" id="age" placeholder="Entrez votre âge">
+        <label for="activity">Niveau d'activité :</label>
+        <select id="activity">
+            <option value="1.2">🪑 Sédentaire : Activité physique très faible</option>
+            <option value="1.375">🚶 Peu actif : Marcher un peu (5 000 à 7 000 pas/jour)</option>
+            <option value="1.55">🏋️ Modérément actif : Travail debout ou sport 3-5 fois/semaine</option>
+            <option value="1.725">💪 Très actif : Vie dynamique + sport intense 6-7 jours/semaine</option>
+            <option value="1.9">🔥 Extrêmement actif : Sport de haut niveau</option>
+        </select>
+        <button onclick="calculateCalories()">Calculer</button>
+        <div id="results" class="results" style="display: none;"></div>
+    </div>
+    <script>
+        function calculateCalories() {
+            const sex = document.getElementById('sex').value;
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseFloat(document.getElementById('height').value);
+            const age = parseInt(document.getElementById('age').value);
+            const activity = parseFloat(document.getElementById('activity').value);
+
+            if (isNaN(weight) || isNaN(height) || isNaN(age)) {
+                alert("Veuillez remplir tous les champs correctement.");
+                return;
+            }
+
+            let bmr;
+            if (sex === "female") {
+                bmr = 655 + (10 * weight) + (1.8 * height) - (4.7 * age);
+            } else {
+                bmr = 66 + (13.7 * weight) + (5 * height) - (6.8 * age);
+            }
+
+            const maintenanceCalories = Math.round(bmr * activity);
+            const loseWeight = Math.round(maintenanceCalories - 500);
+            const gainWeight = Math.round(maintenanceCalories + 500);
+
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('results').innerHTML = `
+                <h2>Résultats :</h2>
+                <p>📊 <strong>Métabolisme de base (BMR) :</strong> ${Math.round(bmr)} kcal</p>
+                <p>⚖️ <strong>Maintien calorique :</strong> ${maintenanceCalories} kcal</p>
+                <p>➖ <strong>Pour perdre du poids :</strong> ${loseWeight} kcal</p>
+                <p>➕ <strong>Pour prendre du poids :</strong> ${gainWeight} kcal</p>
+            `;
+        }
+    </script>
+</body>
+</html>
